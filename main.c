@@ -274,174 +274,148 @@ void putRand()
   }
 }
 
-short up()
-{
-  short i, j, k, valid_step = 0;
-  for (j = 0; j < BOARD_SIZE; ++j)
-  {
-    for (i = BOARD_SIZE - 1; i >= 0; --i)
-    {
-      if (gameBoard[i][j] == 0)
-      {
-        for (k = i - 1; k >= 0; --k)
-        {
-          if (gameBoard[k][j] != 0)
-          {
-            gameBoard[i][j] = gameBoard[k][j];
-            gameBoard[k][j] = 0;
-            valid_step = 1;
-            i++;
-            break;
-          }
-        }
-      }
-      else
-      {
-        for (k = i - 1; k >= 0; --k)
-        {
-          if (gameBoard[k][j] != 0)
-          {
-            if (gameBoard[k][j] != gameBoard[i][j])
-              break;
-            gameBoard[i][j] += 1;
-            gameBoard[k][j] = 0;
-            valid_step = 1;
-            score += 1 << gameBoard[i][j];
-            break;
-          }
-        }
-      }
-    }
-  }
+short up() {
+    short i, j, k;
+    short valid_step = 0;
 
-  return valid_step;
+    for (j = 0; j < BOARD_SIZE; ++j) {
+        for (i = 0; i < BOARD_SIZE; ++i) {
+            if (gameBoard[i][j] == 0) {
+                for (k = i + 1; k < BOARD_SIZE; ++k) {
+                    if (gameBoard[k][j] != 0) {
+                        valid_step = 1;
+                        gameBoard[i][j] = gameBoard[k][j];
+                        gameBoard[k][j] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (i = 0; i < BOARD_SIZE - 1; ++i) {
+            if (gameBoard[i][j] != 0 && gameBoard[i][j] == gameBoard[i + 1][j]) {
+                valid_step = 1;
+                gameBoard[i][j] += 1;
+                score += 1 << gameBoard[i][j];
+                gameBoard[i + 1][j] = 0;
+
+                for (k = i + 1; k < BOARD_SIZE - 1; ++k) {
+                    gameBoard[k][j] = gameBoard[k + 1][j];
+                }
+                gameBoard[BOARD_SIZE - 1][j] = 0;
+            }
+        }
+    }
+
+    return valid_step;
 }
 
-short down()
-{
-  short i, j, k, valid_step = 0;
-  for (j = 0; j < BOARD_SIZE; ++j)
-  {
-    for (i = 0; i < BOARD_SIZE; ++i)
-    {
-      if (gameBoard[i][j] == 0)
-      {
-        for (k = i + 1; k < BOARD_SIZE; ++k)
-        {
-          if (gameBoard[k][j] != 0)
-          {
-            gameBoard[i][j] = gameBoard[k][j];
-            gameBoard[k][j] = 0;
-            valid_step = 1;
-            i--;
-            break;
-          }
-        }
-      }
-      else
-      {
-        for (k = i + 1; k < BOARD_SIZE; ++k)
-        {
-          if (gameBoard[k][j] != 0)
-          {
-            if (gameBoard[k][j] != gameBoard[i][j])
-              break;
-            gameBoard[i][j] += 1;
-            gameBoard[k][j] = 0;
-            valid_step = 1;
-            score += 1 << gameBoard[i][j];
-            break;
-          }
-        }
-      }
-    }
-  }
+short down() {
+    short i, j, k;
+    short valid_step = 0;
 
-  return valid_step;
+    for (j = 0; j < BOARD_SIZE; ++j) {
+        for (i = BOARD_SIZE - 1; i >= 0; --i) {
+            if (gameBoard[i][j] == 0) {
+                for (k = i - 1; k >= 0; --k) {
+                    if (gameBoard[k][j] != 0) {
+                        valid_step = 1;
+                        gameBoard[i][j] = gameBoard[k][j];
+                        gameBoard[k][j] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (i = BOARD_SIZE - 1; i > 0; --i) {
+            if (gameBoard[i][j] != 0 && gameBoard[i][j] == gameBoard[i - 1][j]) {
+                valid_step = 1;
+                gameBoard[i][j] += 1;
+                score += 1 << gameBoard[i][j];
+                gameBoard[i - 1][j] = 0;
+
+                for (k = i - 1; k > 0; --k) {
+                    gameBoard[k][j] = gameBoard[k - 1][j];
+                }
+                gameBoard[0][j] = 0;
+            }
+        }
+    }
+
+    return valid_step;
 }
 
-short left()
-{
-  short i, j, k, valid_step = 0;
-  for (i = 0; i < BOARD_SIZE; ++i)
-  {
-    for (j = 0; j < BOARD_SIZE; ++j)
-    {
-      if (gameBoard[i][j] == 0)
-      {
-        for (k = j + 1; k < BOARD_SIZE; ++k)
-        {
-          if (gameBoard[i][k] != 0)
-          {
-            valid_step = 1;
-            gameBoard[i][j] = gameBoard[i][k];
-            gameBoard[i][k] = 0;
-            j--;
-            break;
-          }
-        }
-      }
-      else
-      {
-        for (k = j + 1; k < BOARD_SIZE; ++k)
-        {
-          if (gameBoard[i][k] != 0)
-          {
-            if (gameBoard[i][j] != gameBoard[i][k])
-              break;
-            valid_step = 1;
-            gameBoard[i][j] += 1;
-            gameBoard[i][k] = 0;
-            score += 1 << gameBoard[i][j];
-          }
-        }
-      }
-    }
-  }
+short left() {
+    short i, j, k;
+    short valid_step = 0;
 
-  return valid_step;
+    for (i = 0; i < BOARD_SIZE; ++i) {
+        for (j = 0; j < BOARD_SIZE; ++j) {
+            if (gameBoard[i][j] == 0) {
+                for (k = j + 1; k < BOARD_SIZE; ++k) {
+                    if (gameBoard[i][k] != 0) {
+                        valid_step = 1;
+                        gameBoard[i][j] = gameBoard[i][k];
+                        gameBoard[i][k] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (j = 0; j < BOARD_SIZE - 1; ++j) {
+            if (gameBoard[i][j] != 0 && gameBoard[i][j] == gameBoard[i][j + 1]) {
+                valid_step = 1;
+                gameBoard[i][j] += 1;
+                score += 1 << gameBoard[i][j];
+                gameBoard[i][j + 1] = 0;
+
+                for (k = j + 1; k < BOARD_SIZE - 1; ++k) {
+                    gameBoard[i][k] = gameBoard[i][k + 1];
+                }
+                gameBoard[i][BOARD_SIZE - 1] = 0;
+            }
+        }
+    }
+
+    return valid_step;
 }
 
-short right()
-{
-  short i, j, k, valid_step = 0;
-  for (i = 0; i < BOARD_SIZE; ++i)
-  {
-    for (j = BOARD_SIZE - 1; j >= 0; --j)
-    {
-      if (gameBoard[i][j] == 0)
-      {
-        for (k = j - 1; k >= 0; --k)
-        {
-          if (gameBoard[i][k] != 0)
-          {
-            valid_step = 1;
-            gameBoard[i][j] = gameBoard[i][k];
-            gameBoard[i][k] = 0;
-            j++;
-            break;
-          }
-        }
-      }
-      else
-      {
-        for (k = j - 1; k >= 0; --k)
-        {
-          if (gameBoard[i][k] != 0)
-          {
-            if (gameBoard[i][j] != gameBoard[i][k])
-              break;
-            valid_step = 1;
-            gameBoard[i][j] += 1;
-            gameBoard[i][k] = 0;
-            score += 1 << gameBoard[i][j];
-          }
-        }
-      }
-    }
-  }
+short right() {
+    short i, j, k;
+    short valid_step = 0;
 
-  return valid_step;
+    for (i = 0; i < BOARD_SIZE; ++i) {
+        for (j = BOARD_SIZE - 1; j >= 0; --j) {
+            if (gameBoard[i][j] == 0) {
+                for (k = j - 1; k >= 0; --k) {
+                    if (gameBoard[i][k] != 0) {
+                        valid_step = 1;
+                        gameBoard[i][j] = gameBoard[i][k];
+                        gameBoard[i][k] = 0;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (j = BOARD_SIZE - 1; j > 0; --j) {
+            if (gameBoard[i][j] != 0 && gameBoard[i][j] == gameBoard[i][j - 1]) {
+                valid_step = 1;
+                gameBoard[i][j] += 1;
+                score += 1 << gameBoard[i][j];
+                gameBoard[i][j - 1] = 0;
+
+                for (k = j - 1; k > 0; --k) {
+                    gameBoard[i][k] = gameBoard[i][k - 1];
+                }
+                gameBoard[i][0] = 0;
+            }
+        }
+    }
+
+    return valid_step;
 }
 
 void game()
