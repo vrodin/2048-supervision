@@ -274,7 +274,7 @@ void putRand()
   }
 }
 
-short up() {
+short down() {
     short i, j, k;
     short valid_step = 0;
 
@@ -310,7 +310,7 @@ short up() {
     return valid_step;
 }
 
-short down() {
+short up() {
     short i, j, k;
     short valid_step = 0;
 
